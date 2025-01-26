@@ -104,10 +104,10 @@ class MovieLanguagesListSerializer(serializers.ModelSerializer):
 
 class MovieListSerializer(serializers.ModelSerializer):
     language_movie = MovieLanguagesListSerializer()
-    movie_genre = GenreSimpleSerializer(many=True, read_only=True)
+    genre = GenreSimpleSerializer()
     class Meta:
         model = Movie
-        fields = ['id', 'movie_image', 'movie_name', 'movie_time', 'movie_genre', 'language_movie']
+        fields = ['id', 'movie_image', 'movie_name', 'movie_time', 'genre', 'language_movie']
 
 
 class DirectorDetailSerializer(serializers.ModelSerializer):
@@ -130,11 +130,11 @@ class ActorDetailSerializer(serializers.ModelSerializer):
 
 
 class GenreDetailSerializer(serializers.ModelSerializer):
-    genre_movie = MovieListSerializer(many=True, read_only=True)
+    movie_genre = MovieListSerializer(many=True, read_only=True)
 
     class Meta:
         model = Genre
-        fields = ['genre_name', 'genre_movie']
+        fields = ['genre_name', 'movie_genre']
 
 class CountryDetailSerializer(serializers.ModelSerializer):
     country_movie = MovieListSerializer(many=True, read_only=True)

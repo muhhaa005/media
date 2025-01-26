@@ -1,4 +1,4 @@
-from http.cookiejar import reach
+
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -51,12 +51,21 @@ class Actor(models.Model):
         return f'{self.actor_name}, {self.age}'
 
 
+class Genre(models.Model):
+    genre_name = models.CharField(max_length=32, unique=True)
+
+
+    def __str__(self):
+        return self.genre_name
+
+
 class Movie(models.Model):
     movie_name = models.CharField(max_length=32, unique=True)
     year = models.PositiveSmallIntegerField(validators=[MinValueValidator(1966), MaxValueValidator(2025)])
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='country_movie')
-    director = models.ForeignKey(Director, on_delete=models.CASCADE, related_name='director_movie')
+    director = models.ManyToManyField(Director, related_name='director_movie')
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, related_name='actor_movie')
+    genre = models.ManyToManyField(Genre, related_name='movie_genre')
     movie_time = models.PositiveSmallIntegerField()
     description = models.TextField()
     movie_trailer = models.FileField(upload_to='trailer_videos')
@@ -90,13 +99,6 @@ class Types(models.Model):
         return 0
 
 
-class Genre(models.Model):
-    genre_name = models.CharField(max_length=32, unique=True)
-    genre = models.ForeignKey(Movie, on_delete=models.CASCADE, null=True, blank=True)
-
-
-    def __str__(self):
-        return self.genre_name
 
 class GenreSimple(models.Model):
     genre_name = models.ForeignKey(Genre, on_delete=models.CASCADE, null=True, blank=True)
