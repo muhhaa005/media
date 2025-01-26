@@ -57,6 +57,16 @@ class Movie(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='country_movie')
     director = models.ForeignKey(Director, on_delete=models.CASCADE, related_name='director_movie')
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, related_name='actor_movie')
+    movie_time = models.PositiveSmallIntegerField()
+    description = models.TextField()
+    movie_trailer = models.FileField(upload_to='trailer_videos')
+    movie_image = models.ImageField(upload_to='movie_images')
+    status_movie = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.movie_name}, {self.year}, {self.director}'
+
+class Types(models.Model):
     TYPES_CHOICES = (
         (144, 144),
         (360, 360),
@@ -66,14 +76,7 @@ class Movie(models.Model):
          ),
     )
     types = models.PositiveSmallIntegerField(choices=TYPES_CHOICES, default=720)
-    movie_time = models.PositiveSmallIntegerField()
-    description = models.TextField()
-    movie_trailer = models.FileField(upload_to='trailer_videos')
-    movie_image = models.ImageField(upload_to='movie_images')
-    status_movie = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f'{self.movie_name}, {self.year}, {self.director}'
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='movie_types')
 
     def get_avg_rating(self):
         total = self.rating_movie.all()

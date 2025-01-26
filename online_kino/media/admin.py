@@ -10,6 +10,10 @@ class GenreSimpleInline(admin.TabularInline):
     model = GenreSimple
     extra = 1
 
+class TypesInline(admin.TabularInline):
+    model = Types
+    extra = 1
+
 @admin.register(Director)
 class UserAdmin(TranslationAdmin):
     inlines = [GenreSimpleInline]
@@ -40,7 +44,9 @@ class CountryAdmin(TranslationAdmin):
 
 @admin.register(Movie)
 class MovieAdmin(TranslationAdmin):
-    inlines = [MomentsInline, GenreSimpleInline]
+    inlines = [MomentsInline, GenreSimpleInline, TypesInline]
+
+
 
     class Media:
         js = (

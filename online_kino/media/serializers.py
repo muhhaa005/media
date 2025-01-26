@@ -100,14 +100,10 @@ class MovieLanguagesListSerializer(serializers.ModelSerializer):
         model = MovieLanguages
         fields = ['id', 'language']
 
-class MovieLanguagesSimpleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MovieLanguages
-        fields = ['language']
 
 
 class MovieListSerializer(serializers.ModelSerializer):
-    language_movie = MovieLanguagesSimpleSerializer(many=True, read_only=True)
+    language_movie = MovieLanguagesListSerializer()
     movie_genre = GenreSimpleSerializer(many=True, read_only=True)
     class Meta:
         model = Movie
@@ -144,7 +140,7 @@ class CountryDetailSerializer(serializers.ModelSerializer):
     country_movie = MovieListSerializer(many=True, read_only=True)
     class Meta:
         model = Country
-        fields = ['country_name']
+        fields = ['country_name', 'country_movie']
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -165,13 +161,14 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     director = DirectorSimpleSerializer()
     actor = ActorSimpleSerializer()
     country = CountrySimpleSerializer()
+    language_movie = MovieLanguagesListSerializer()
     avg_rating = serializers.SerializerMethodField()
     count_people = serializers.SerializerMethodField
     movie_genre = GenreSimpleSerializer(many=True, read_only=True)
 
     class Meta:
         model = Movie
-        fields = ['movie_name', 'director', 'actor', 'country', 'movie_genre',
+        fields = ['movie_name', 'director', 'actor', 'country', 'movie_genre', 'language_movie',
                   'types', 'movie_time', 'year', 'description', 'movie_image', 'movie_trailer',
                   'status_movie', 'rating_movie', 'avg_rating', 'get_count_people']
 
